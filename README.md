@@ -1,6 +1,6 @@
-# GPS Route Quality Monitoring
+# Monitoring GPS Reliability for Route Operations
 
-A reproducible portfolio reconstruction of a transportation analytics engagement. The project turns raw GPS pings into interpretable trip- and device-level quality signals for operational monitoring.
+A Python pipeline that converts raw GPS pings into interpretable trip-quality flags and device-health scores using synthetic transportation data.
 
 ## Business question
 
