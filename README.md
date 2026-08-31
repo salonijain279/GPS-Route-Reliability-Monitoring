@@ -1,44 +1,74 @@
-# Monitoring GPS Reliability for Route Operations
+# GPS Route Reliability Monitoring
 
-In the original academic live case, I worked with school-transportation GPS data and saw how difficult it can be to separate an operational issue from a tracking issue. For this public version, I rebuilt that analytical workflow in Python with synthetic data.
+**A reproducible geospatial analytics workflow for separating route-performance issues from unreliable GPS telemetry.**
 
-I designed the pipeline to convert raw GPS pings into interpretable trip-quality flags and device-health scores rather than hiding the decision inside one opaque model.
+This project grew from a Spring MSBA exploratory analytics live case involving school-transportation operations. My core question was simple: when a route appears incomplete, did the vehicle miss the route—or did the tracking device fail to record it correctly?
 
-## Business question
-
-How can an operations team distinguish a route that was executed as planned from one that only appears incomplete because its tracking device was unreliable?
+I rebuilt the GPS-reliability branch of that work with deterministic synthetic data. The public repository preserves the analytical logic while excluding every client route, location, identifier, result, and deliverable.
 
 ## What I built
 
-- validates trip and position schemas;
-- measures ping coverage and the largest reporting gap;
-- flags frozen coordinates, missing GPS, long gaps, and low coverage;
-- produces a transparent 0-100 trip-quality score;
-- aggregates recurring issues into a device-health report.
+I analyze reliability at three connected levels:
 
-## Repository safety
+1. **GPS ping quality** — schema checks, provider-specific polling expectations, missing coverage, long reporting gaps, and frozen coordinates.
+2. **Spatial movement quality** — vectorized Haversine distance, path length, maximum implied speed, invalid coordinates, and impossible spatial jumps.
+3. **Route execution evidence** — 175-metre stop geofences, minimum stop distance, stop completion, and observed stop order.
 
-I did not include any client data, names, identifiers, routes, schools, vendors, screenshots, or internal documentation from the live case. I wrote a small synthetic-data generator solely to demonstrate my analytical workflow.
+The trip-level signals roll into an explicit 0–100 quality score and a recurring device-health report. The rules remain visible so an operations team can inspect why a trip or device was flagged.
 
-## Run
+## Controlled demo
+
+The synthetic fixture contains 60 trips, three planned routes, 18 stops, six devices, and two GPS providers. I deliberately inject a different failure pattern into four devices so the pipeline has known ground truth.
+
+| Device pattern | Evidence recovered by the pipeline | Mean quality score |
+|---|---:|---:|
+| Healthy telemetry | Plausible movement and 100% stop completion | **100** |
+| Impossible coordinate jump | Maximum implied speed above 4,000 km/h | **75** |
+| Low polling coverage | 33.5% mean coverage and 80% stop completion | **80** |
+| Long reporting gap | A gap longer than five minutes on every trip | **80** |
+| Frozen coordinates | Zero path distance and only 16.7% stop completion | **65** |
+
+These values describe the controlled public fixture—not the confidential live-case data.
+
+## Analysis notebook
+
+[`notebooks/gps_route_reliability_analysis.ipynb`](notebooks/gps_route_reliability_analysis.ipynb) walks through the decision question, synthetic data, temporal and spatial diagnostics, geofence validation, and device-level results.
+
+The original course folder includes my iterative V7 analysis notebooks and route-validation working files. I did not publish those raw artifacts because they contain client-linked paths, outputs, and context; I extracted the reusable methods into this clean notebook and a tested Python pipeline instead.
+
+## Repository structure
+
+```text
+notebooks/
+  gps_route_reliability_analysis.ipynb  Guided, public-safe analysis
+src/
+  generate_sample_data.py               Deterministic routes and failure modes
+  gps_quality.py                        Spatial, temporal, trip, and device metrics
+tests/
+  test_gps_quality.py                   Distance, anomaly, geofence, and schema tests
+data/
+  README.md                              Data-generation and privacy notes
+```
+
+## Run locally
 
 ```bash
 python src/generate_sample_data.py
 python src/gps_quality.py
-python -m unittest discover -s tests
+python -m unittest discover -s tests -v
 ```
 
-Generated files:
+The pipeline generates:
 
-- `data/trips.csv`
-- `data/positions.csv`
-- `outputs/trip_gps_quality.csv`
-- `outputs/device_health_report.csv`
+- `data/trips.csv`, `data/positions.csv`, and `data/route_stops.csv`;
+- `outputs/trip_gps_quality.csv` with trip-level temporal and spatial diagnostics;
+- `outputs/stop_geofence_validation.csv` with planned-stop proximity and visits;
+- `outputs/device_health_report.csv` with recurring failure rates and actions.
 
-## Methods
+## Methods and tools
 
-`Python` · `pandas` · data validation · anomaly detection · interpretable scoring · operational analytics
+`Python` · `pandas` · `NumPy` · vectorized Haversine distance · GPS telemetry QA · spatial anomaly detection · geofencing · route-order validation · interpretable scoring · unit testing
 
-## Portfolio context
+## Scope
 
-This public reconstruction reflects the method developed during MSBA coursework. It is intentionally generic and is not a deployment artifact from the client environment.
+This repository demonstrates how I approached one analytical branch of the broader live case. The thresholds are transparent examples, not universal operating standards; a production implementation should calibrate polling, speed, and geofence rules by provider, vehicle type, road context, and business policy.
