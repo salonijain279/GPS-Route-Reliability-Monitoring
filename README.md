@@ -1,12 +1,14 @@
 # Monitoring GPS Reliability for Route Operations
 
-A Python pipeline that converts raw GPS pings into interpretable trip-quality flags and device-health scores using synthetic transportation data.
+In the original academic live case, I worked with school-transportation GPS data and saw how difficult it can be to separate an operational issue from a tracking issue. For this public version, I rebuilt that analytical workflow in Python with synthetic data.
+
+I designed the pipeline to convert raw GPS pings into interpretable trip-quality flags and device-health scores rather than hiding the decision inside one opaque model.
 
 ## Business question
 
 How can an operations team distinguish a route that was executed as planned from one that only appears incomplete because its tracking device was unreliable?
 
-## What the pipeline does
+## What I built
 
 - validates trip and position schemas;
 - measures ping coverage and the largest reporting gap;
@@ -16,7 +18,7 @@ How can an operations team distinguish a route that was executed as planned from
 
 ## Repository safety
 
-The original academic live case used client-provided school-transportation data. **No client data, names, identifiers, routes, schools, vendors, screenshots, or internal documentation are included here.** The generator creates a small synthetic dataset solely to demonstrate the analytical workflow.
+I did not include any client data, names, identifiers, routes, schools, vendors, screenshots, or internal documentation from the live case. I wrote a small synthetic-data generator solely to demonstrate my analytical workflow.
 
 ## Run
 
