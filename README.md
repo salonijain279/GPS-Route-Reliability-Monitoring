@@ -2,9 +2,9 @@
 
 **A reproducible geospatial analytics workflow for separating route-performance issues from unreliable GPS telemetry.**
 
-This project grew from a Spring MSBA exploratory analytics live case involving school-transportation operations. My core question was simple: when a route appears incomplete, did the vehicle miss the route—or did the tracking device fail to record it correctly?
+This project addresses a practical school-transportation question: when a route appears incomplete, did the vehicle miss the route—or did the tracking device fail to record it correctly?
 
-I rebuilt the GPS-reliability branch of that work with deterministic synthetic data. The public repository preserves the analytical logic while excluding every client route, location, identifier, result, and deliverable.
+The public implementation uses deterministic synthetic data and contains no client routes, locations, identifiers, results, or deliverables.
 
 ## What I built
 
@@ -34,7 +34,7 @@ These values describe the controlled public fixture—not the confidential live-
 
 [`notebooks/gps_route_reliability_analysis.ipynb`](notebooks/gps_route_reliability_analysis.ipynb) walks through the decision question, synthetic data, temporal and spatial diagnostics, geofence validation, and device-level results.
 
-The original course folder includes my iterative V7 analysis notebooks and route-validation working files. I did not publish those raw artifacts because they contain client-linked paths, outputs, and context; I extracted the reusable methods into this clean notebook and a tested Python pipeline instead.
+The notebook and tested Python pipeline use only the synthetic fixture included in this repository.
 
 ## Repository structure
 
@@ -71,4 +71,4 @@ The pipeline generates:
 
 ## Scope
 
-This repository demonstrates how I approached one analytical branch of the broader live case. The thresholds are transparent examples, not universal operating standards; a production implementation should calibrate polling, speed, and geofence rules by provider, vehicle type, road context, and business policy.
+The thresholds are transparent examples, not universal operating standards. A production implementation should calibrate polling, speed, and geofence rules by provider, vehicle type, road context, and business policy.
