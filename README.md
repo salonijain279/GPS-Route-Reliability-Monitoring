@@ -6,9 +6,9 @@ This project addresses a practical school-transportation question: when a route 
 
 The public implementation uses deterministic synthetic data and contains no client routes, locations, identifiers, results, or deliverables.
 
-## What I built
+## Approach
 
-I analyze reliability at three connected levels:
+Reliability is analyzed at three connected levels:
 
 1. **GPS ping quality** — schema checks, provider-specific polling expectations, missing coverage, long reporting gaps, and frozen coordinates.
 2. **Spatial movement quality** — vectorized Haversine distance, path length, maximum implied speed, invalid coordinates, and impossible spatial jumps.
@@ -18,7 +18,7 @@ The trip-level signals roll into an explicit 0–100 quality score and a recurri
 
 ## Controlled demo
 
-The synthetic fixture contains 60 trips, three planned routes, 18 stops, six devices, and two GPS providers. I deliberately inject a different failure pattern into four devices so the pipeline has known ground truth.
+The synthetic fixture contains 60 trips, three planned routes, 18 stops, six devices, and two GPS providers, with a different failure pattern deliberately injected into four devices so the pipeline has known ground truth.
 
 | Device pattern | Evidence recovered by the pipeline | Mean quality score |
 |---|---:|---:|
