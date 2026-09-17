@@ -8,6 +8,15 @@ The public implementation uses deterministic synthetic data and contains no clie
 
 ## Approach
 
+```mermaid
+flowchart LR
+    A[Raw GPS pings] --> B[Ping quality: coverage & schema checks]
+    B --> C[Spatial quality: Haversine, speed, jumps]
+    C --> D[Route evidence: geofences & stop order]
+    D --> E[0-100 quality score]
+    E --> F[Device-health report]
+```
+
 Reliability is analyzed at three connected levels:
 
 1. **GPS ping quality** — schema checks, provider-specific polling expectations, missing coverage, long reporting gaps, and frozen coordinates.
